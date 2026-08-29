@@ -6,6 +6,7 @@ import EventBar from "./EventBar";
 
 const LANE_HEIGHT = 20;
 const BAR_AREA_TOP = 32;
+const MAX_BAR_LANES = 2;
 
 interface WeekRowProps {
   week: Date[];
@@ -29,7 +30,15 @@ export default function WeekRow({
   onSelectEvent,
 }: WeekRowProps) {
   const bars = layoutWeekBars(week, events);
-  const laneCount = bars.reduce((max, bar) => Math.max(max, bar.lane + 1), 0);
+  const visibleBars = bars.filter((bar) => bar.lane < MAX_BAR_LANES);
+  const hiddenBars = bars.filter((bar) => bar.lane >= MAX_BAR_LANES);
+  const laneCount = Math.min(MAX_BAR_LANES, bars.reduce((max, bar) => Math.max(max, bar.lane + 1), 0));
+  const overflowRow = hiddenBars.length > 0 ? laneCount + 1 : 0;
+  const reservedLanes = laneCount + (overflowRow > 0 ? 1 : 0);
+
+  const hiddenCountByCol = week.map(
+    (_, col) => hiddenBars.filter((bar) => bar.startCol <= col && bar.endCol >= col).length
+  );
 
   return (
     <div className="relative">
@@ -42,19 +51,19 @@ export default function WeekRow({
             isToday={isSameDay(date, today)}
             isSelected={value ? isSameDay(date, value) : false}
             onClick={onSelectDate}
-            contentOffset={laneCount * LANE_HEIGHT}
+            contentOffset={reservedLanes * LANE_HEIGHT}
           >
             {renderDay?.(date)}
           </DayCell>
         ))}
       </div>
 
-      {laneCount > 0 && (
+      {reservedLanes > 0 && (
         <div
           className="pointer-events-none absolute inset-x-0 grid grid-cols-7 gap-px px-px"
           style={{ top: BAR_AREA_TOP, rowGap: 2 }}
         >
-          {bars.map(({ event, startCol, endCol, lane, continuesBefore, continuesAfter }) => (
+          {visibleBars.map(({ event, startCol, endCol, lane, continuesBefore, continuesAfter }) => (
             <div
               key={event.id}
               className="pointer-events-auto"
@@ -69,6 +78,29 @@ export default function WeekRow({
               />
             </div>
           ))}
+
+          {overflowRow > 0 &&
+            hiddenCountByCol.map(
+              (count, col) =>
+                count > 0 && (
+                  <div
+                    key={`overflow-${col}`}
+                    className="pointer-events-auto"
+                    style={{ gridColumn: `${col + 1} / ${col + 2}`, gridRow: overflowRow }}
+                  >
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onSelectDate?.(week[col]);
+                      }}
+                      className="px-1.5 text-left text-[11px] font-medium text-gray-500 hover:text-gray-700 hover:underline"
+                    >
+                      +{count} more
+                    </button>
+                  </div>
+                )
+            )}
         </div>
       )}
     </div>

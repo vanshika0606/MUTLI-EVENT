@@ -104,10 +104,12 @@ function App() {
         renderDay={(date) => {
           const dayBookings = bookingsByDate.get(formatDateKey(date)) ?? [];
           const singleDayBookings = dayBookings.filter((b) => b.startDate === b.endDate);
+          const hasBar = dayBookings.some((b) => b.startDate !== b.endDate);
 
           return (
             <EventList
               bookings={singleDayBookings}
+              maxVisible={hasBar ? 0 : 1}
               onSelectBooking={(booking) => setSidebarView({ type: "booking", booking, siblings: dayBookings })}
               onShowMore={() => setSidebarView({ type: "day", date, bookings: dayBookings })}
             />
