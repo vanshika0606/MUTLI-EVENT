@@ -18,10 +18,14 @@ export default function DayCell({
   children,
 }: DayCellProps) {
   return (
-    <button
-      type="button"
+    <div
+      role="button"
+      tabIndex={0}
       onClick={() => onClick?.(date)}
-      className={`flex min-h-20 flex-col items-start gap-1 rounded-md border p-1.5 text-left ${
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") onClick?.(date);
+      }}
+      className={`flex min-h-20 cursor-pointer flex-col items-start gap-1 rounded-md border p-1.5 text-left ${
         isSelected ? "border-blue-500 ring-2 ring-inset ring-blue-500" : "border-gray-200"
       } ${isCurrentMonth ? "bg-white" : "bg-gray-50 opacity-60"}`}
     >
@@ -33,6 +37,6 @@ export default function DayCell({
         {date.getDate()}
       </span>
       {children}
-    </button>
+    </div>
   );
 }
