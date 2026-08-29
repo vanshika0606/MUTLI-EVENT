@@ -5,12 +5,19 @@ import MonthlyCalendar from "./components/Calendar/MonthlyCalendar";
 import EventList from "./components/Calendar/EventList";
 import BookingSidebar, { type SidebarView } from "./components/BookingCard/BookingSidebar";
 import mockData from "./data/mockData.json";
-import type { MockData } from "./types/mockData";
+import type { Booking, MockData } from "./types/mockData";
 import { formatDateKey } from "./utils/calendar";
 import { groupBookingsByDate } from "./utils/bookings";
+import type { RangeEvent } from "./utils/eventBars";
 
 const data = mockData as MockData;
 const ALL_HALLS = "all";
+
+const STATUS_BAR_STYLES: Record<Booking["status"], string> = {
+  Confirmed: "bg-emerald-600 text-white",
+  Tentative: "bg-amber-500 text-white",
+  Maintenance: "bg-gray-500 text-white",
+};
 
 function App() {
   const [venueId, setVenueId] = useState(data.venues[0].id);
@@ -20,12 +27,31 @@ function App() {
 
   const venue = data.venues.find((v) => v.id === venueId)!;
 
-  const bookingsByDate = useMemo(() => {
-    const venueBookings = data.bookings.filter(
-      (b) => b.venue === venueId && (hallId === ALL_HALLS || b.hall === hallId)
-    );
-    return groupBookingsByDate(venueBookings);
-  }, [venueId, hallId]);
+  const filteredBookings = useMemo(
+    () => data.bookings.filter((b) => b.venue === venueId && (hallId === ALL_HALLS || b.hall === hallId)),
+    [venueId, hallId]
+  );
+
+  const bookingsByDate = useMemo(() => groupBookingsByDate(filteredBookings), [filteredBookings]);
+
+  const multiDayEvents = useMemo<RangeEvent[]>(
+    () =>
+      filteredBookings
+        .filter((b) => b.startDate !== b.endDate)
+        .map((b) => ({
+          id: b.id,
+          label: b.event,
+          startDate: b.startDate,
+          endDate: b.endDate,
+          className: STATUS_BAR_STYLES[b.status],
+        })),
+    [filteredBookings]
+  );
+
+  function selectBooking(booking: Booking) {
+    const siblings = bookingsByDate.get(booking.startDate) ?? [booking];
+    setSidebarView({ type: "booking", booking, siblings });
+  }
 
   function handleVenueChange(nextVenueId: string) {
     setVenueId(nextVenueId);
@@ -70,13 +96,23 @@ function App() {
       <MonthlyCalendar
         value={selectedDate}
         onChange={handleDateClick}
-        renderDay={(date) => (
-          <EventList
-            bookings={bookingsByDate.get(formatDateKey(date)) ?? []}
-            onSelectBooking={(booking, siblings) => setSidebarView({ type: "booking", booking, siblings })}
-            onShowMore={(dayBookings) => setSidebarView({ type: "day", date, bookings: dayBookings })}
-          />
-        )}
+        events={multiDayEvents}
+        onSelectEvent={(event) => {
+          const booking = filteredBookings.find((b) => b.id === event.id);
+          if (booking) selectBooking(booking);
+        }}
+        renderDay={(date) => {
+          const dayBookings = bookingsByDate.get(formatDateKey(date)) ?? [];
+          const singleDayBookings = dayBookings.filter((b) => b.startDate === b.endDate);
+
+          return (
+            <EventList
+              bookings={singleDayBookings}
+              onSelectBooking={(booking) => setSidebarView({ type: "booking", booking, siblings: dayBookings })}
+              onShowMore={() => setSidebarView({ type: "day", date, bookings: dayBookings })}
+            />
+          );
+        }}
       />
 
       <BookingSidebar

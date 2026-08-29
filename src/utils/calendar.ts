@@ -26,3 +26,12 @@ export function getMonthGrid(monthDate: Date): Date[] {
     (_, i) => new Date(gridStart.getFullYear(), gridStart.getMonth(), gridStart.getDate() + i)
   );
 }
+
+/** Splits a flat 42-day grid into 6 weeks of 7 days each. */
+export function chunkIntoWeeks(days: Date[]): Date[][] {
+  const weeks: Date[][] = [];
+  for (let i = 0; i < days.length; i += 7) {
+    weeks.push(days.slice(i, i + 7));
+  }
+  return weeks;
+}

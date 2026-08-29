@@ -1,19 +1,28 @@
 import type { ReactNode } from "react";
 import { useState } from "react";
-import { WEEKDAY_LABELS, getMonthGrid, isSameDay } from "../../utils/calendar";
-import DayCell from "./DayCell";
+import { WEEKDAY_LABELS, chunkIntoWeeks, getMonthGrid } from "../../utils/calendar";
+import type { RangeEvent } from "../../utils/eventBars";
+import WeekRow from "./WeekRow";
 
 interface MonthlyCalendarProps {
   value?: Date;
   onChange?: (date: Date) => void;
   renderDay?: (date: Date) => ReactNode;
+  events?: RangeEvent[];
+  onSelectEvent?: (event: RangeEvent) => void;
 }
 
-export default function MonthlyCalendar({ value, onChange, renderDay }: MonthlyCalendarProps) {
+export default function MonthlyCalendar({
+  value,
+  onChange,
+  renderDay,
+  events,
+  onSelectEvent,
+}: MonthlyCalendarProps) {
   const [visibleMonth, setVisibleMonth] = useState(() => value ?? new Date());
   const today = new Date();
 
-  const days = getMonthGrid(visibleMonth);
+  const weeks = chunkIntoWeeks(getMonthGrid(visibleMonth));
   const monthLabel = visibleMonth.toLocaleDateString("en-US", { month: "long", year: "numeric" });
 
   return (
@@ -53,18 +62,21 @@ export default function MonthlyCalendar({ value, onChange, renderDay }: MonthlyC
             {label}
           </div>
         ))}
+      </div>
 
-        {days.map((date) => (
-          <DayCell
-            key={date.toISOString()}
-            date={date}
-            isCurrentMonth={date.getMonth() === visibleMonth.getMonth()}
-            isToday={isSameDay(date, today)}
-            isSelected={value ? isSameDay(date, value) : false}
-            onClick={onChange}
-          >
-            {renderDay?.(date)}
-          </DayCell>
+      <div className="flex flex-col gap-1">
+        {weeks.map((week) => (
+          <WeekRow
+            key={week[0].toISOString()}
+            week={week}
+            monthDate={visibleMonth}
+            today={today}
+            value={value}
+            onSelectDate={onChange}
+            renderDay={renderDay}
+            events={events}
+            onSelectEvent={onSelectEvent}
+          />
         ))}
       </div>
     </div>

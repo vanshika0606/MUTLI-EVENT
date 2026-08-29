@@ -6,6 +6,7 @@ interface DayCellProps {
   isToday: boolean;
   isSelected: boolean;
   onClick?: (date: Date) => void;
+  contentOffset?: number;
   children?: ReactNode;
 }
 
@@ -15,6 +16,7 @@ export default function DayCell({
   isToday,
   isSelected,
   onClick,
+  contentOffset = 0,
   children,
 }: DayCellProps) {
   return (
@@ -36,7 +38,9 @@ export default function DayCell({
       >
         {date.getDate()}
       </span>
-      {children}
+      <div className="w-full" style={{ marginTop: contentOffset }}>
+        {children}
+      </div>
     </div>
   );
 }
