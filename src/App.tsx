@@ -33,7 +33,7 @@ function App() {
     setSelectedDate(date);
     const dayBookings = bookingsByDate.get(formatDateKey(date)) ?? [];
     if (dayBookings.length === 1) {
-      setSidebarView({ type: "booking", booking: dayBookings[0] });
+      setSidebarView({ type: "booking", booking: dayBookings[0], siblings: dayBookings });
     } else if (dayBookings.length > 1) {
       setSidebarView({ type: "day", date, bookings: dayBookings });
     } else {
@@ -56,7 +56,8 @@ function App() {
         renderDay={(date) => (
           <EventList
             bookings={bookingsByDate.get(formatDateKey(date)) ?? []}
-            onSelectBooking={(booking) => setSidebarView({ type: "booking", booking })}
+            onSelectBooking={(booking, siblings) => setSidebarView({ type: "booking", booking, siblings })}
+            onShowMore={(dayBookings) => setSidebarView({ type: "day", date, bookings: dayBookings })}
           />
         )}
       />
@@ -64,7 +65,7 @@ function App() {
       <BookingSidebar
         view={sidebarView}
         onClose={() => setSidebarView(null)}
-        onSelectBooking={(booking) => setSidebarView({ type: "booking", booking })}
+        onSelectBooking={(booking, siblings) => setSidebarView({ type: "booking", booking, siblings })}
         getVenueName={getVenueName}
         getHallName={getHallName}
       />
