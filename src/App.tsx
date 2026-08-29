@@ -31,18 +31,19 @@ function App() {
   const [sidebarView, setSidebarView] = useState<SidebarView | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [bookings, setBookings] = useState<Booking[]>(data.bookings);
 
   const venue = data.venues.find((v) => v.id === venueId)!;
 
   const filteredBookings = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
-    return data.bookings.filter((b) => {
+    return bookings.filter((b) => {
       if (b.venue !== venueId) return false;
       if (hallId !== ALL_HALLS && b.hall !== hallId) return false;
       if (!query) return true;
       return b.event.toLowerCase().includes(query) || b.customer.toLowerCase().includes(query);
     });
-  }, [venueId, hallId, searchQuery]);
+  }, [bookings, venueId, hallId, searchQuery]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -82,6 +83,25 @@ function App() {
 
   function getHallName(id: string) {
     return data.venues.flatMap((v) => v.halls).find((h) => h.id === id)?.name ?? id;
+  }
+
+  function handleDropBooking(bookingId: string, dropDate: Date) {
+    const newStartKey = formatDateKey(dropDate);
+
+    setBookings((prev) =>
+      prev.map((b) => {
+        if (b.id !== bookingId || b.startDate === newStartKey) return b;
+
+        const start = new Date(`${b.startDate}T00:00:00`);
+        const end = new Date(`${b.endDate}T00:00:00`);
+        const durationDays = Math.round((end.getTime() - start.getTime()) / 86_400_000);
+
+        const newStart = new Date(`${newStartKey}T00:00:00`);
+        const newEnd = new Date(newStart.getFullYear(), newStart.getMonth(), newStart.getDate() + durationDays);
+
+        return { ...b, startDate: newStartKey, endDate: formatDateKey(newEnd) };
+      })
+    );
   }
 
   function handleDateClick(date: Date) {
@@ -126,6 +146,7 @@ function App() {
           visibleMonth={visibleMonth}
           value={selectedDate}
           onChange={handleDateClick}
+          onDropBooking={handleDropBooking}
           events={multiDayEvents}
           onSelectEvent={(event) => {
             const booking = filteredBookings.find((b) => b.id === event.id);

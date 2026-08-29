@@ -7,6 +7,7 @@ interface MonthlyCalendarProps {
   visibleMonth: Date;
   value?: Date;
   onChange?: (date: Date) => void;
+  onDropBooking?: (bookingId: string, date: Date) => void;
   renderDay?: (date: Date) => ReactNode;
   events?: RangeEvent[];
   onSelectEvent?: (event: RangeEvent) => void;
@@ -16,6 +17,7 @@ export default function MonthlyCalendar({
   visibleMonth,
   value,
   onChange,
+  onDropBooking,
   renderDay,
   events,
   onSelectEvent,
@@ -42,6 +44,7 @@ export default function MonthlyCalendar({
             today={today}
             value={value}
             onSelectDate={onChange}
+            onDropBooking={onDropBooking}
             renderDay={renderDay}
             events={events}
             onSelectEvent={onSelectEvent}

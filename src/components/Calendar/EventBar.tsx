@@ -1,4 +1,5 @@
 interface EventBarProps {
+  id: string;
   label: string;
   className?: string;
   roundedLeft: boolean;
@@ -7,6 +8,7 @@ interface EventBarProps {
 }
 
 export default function EventBar({
+  id,
   label,
   className = "bg-blue-700 text-white",
   roundedLeft,
@@ -16,11 +18,17 @@ export default function EventBar({
   return (
     <button
       type="button"
+      draggable
+      onDragStart={(e) => {
+        e.stopPropagation();
+        e.dataTransfer.effectAllowed = "move";
+        e.dataTransfer.setData("text/plain", id);
+      }}
       onClick={(e) => {
         e.stopPropagation();
         onClick?.();
       }}
-      className={`h-5 w-full truncate px-1.5 text-left text-[11px] font-medium ${className} ${
+      className={`h-5 w-full cursor-grab truncate px-1.5 text-left text-[11px] font-medium active:cursor-grabbing ${className} ${
         roundedLeft ? "rounded-l" : ""
       } ${roundedRight ? "rounded-r" : ""}`}
     >

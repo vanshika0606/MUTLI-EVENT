@@ -14,6 +14,7 @@ interface WeekRowProps {
   today: Date;
   value?: Date;
   onSelectDate?: (date: Date) => void;
+  onDropBooking?: (bookingId: string, date: Date) => void;
   renderDay?: (date: Date) => ReactNode;
   events?: RangeEvent[];
   onSelectEvent?: (event: RangeEvent) => void;
@@ -25,6 +26,7 @@ export default function WeekRow({
   today,
   value,
   onSelectDate,
+  onDropBooking,
   renderDay,
   events = [],
   onSelectEvent,
@@ -51,6 +53,7 @@ export default function WeekRow({
             isToday={isSameDay(date, today)}
             isSelected={value ? isSameDay(date, value) : false}
             onClick={onSelectDate}
+            onDropBooking={onDropBooking}
             contentOffset={reservedLanes * LANE_HEIGHT}
           >
             {renderDay?.(date)}
@@ -70,6 +73,7 @@ export default function WeekRow({
               style={{ gridColumn: `${startCol + 1} / ${endCol + 2}`, gridRow: lane + 1 }}
             >
               <EventBar
+                id={event.id}
                 label={event.label}
                 className={event.className}
                 roundedLeft={!continuesBefore}
