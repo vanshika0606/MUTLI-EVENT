@@ -10,16 +10,27 @@ import { formatDateKey } from "./utils/calendar";
 import { groupBookingsByDate } from "./utils/bookings";
 
 const data = mockData as MockData;
+const ALL_HALLS = "all";
 
 function App() {
   const [venueId, setVenueId] = useState(data.venues[0].id);
+  const [hallId, setHallId] = useState(ALL_HALLS);
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [sidebarView, setSidebarView] = useState<SidebarView | null>(null);
 
+  const venue = data.venues.find((v) => v.id === venueId)!;
+
   const bookingsByDate = useMemo(() => {
-    const venueBookings = data.bookings.filter((b) => b.venue === venueId);
+    const venueBookings = data.bookings.filter(
+      (b) => b.venue === venueId && (hallId === ALL_HALLS || b.hall === hallId)
+    );
     return groupBookingsByDate(venueBookings);
-  }, [venueId]);
+  }, [venueId, hallId]);
+
+  function handleVenueChange(nextVenueId: string) {
+    setVenueId(nextVenueId);
+    setHallId(ALL_HALLS);
+  }
 
   function getVenueName(id: string) {
     return data.venues.find((v) => v.id === id)?.name ?? id;
@@ -47,7 +58,13 @@ function App() {
         title={data.company.name}
         venueOptions={data.venues.map((v) => ({ label: v.name, value: v.id }))}
         venueId={venueId}
-        onVenueChange={setVenueId}
+        onVenueChange={handleVenueChange}
+        hallOptions={[
+          { label: "All Halls", value: ALL_HALLS },
+          ...venue.halls.map((h) => ({ label: h.name, value: h.id })),
+        ]}
+        hallId={hallId}
+        onHallChange={setHallId}
       />
 
       <MonthlyCalendar

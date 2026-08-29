@@ -8,7 +8,7 @@ interface EventListProps {
   onShowMore?: (bookings: Booking[]) => void;
 }
 
-export default function EventList({ bookings, maxVisible = 2, onSelectBooking, onShowMore }: EventListProps) {
+export default function EventList({ bookings, maxVisible = 1, onSelectBooking, onShowMore }: EventListProps) {
   const visible = bookings.slice(0, maxVisible);
   const hiddenCount = bookings.length - visible.length;
 
