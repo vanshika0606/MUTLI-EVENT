@@ -1,4 +1,4 @@
-import type { Theme } from "../../hooks/useTheme";
+import type { Theme } from "../../store/ThemeContext";
 
 function SunIcon() {
   return (
