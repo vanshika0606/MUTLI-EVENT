@@ -12,7 +12,7 @@ export default function BookingDetails({ booking, venueName, hallName }: Booking
   return (
     <div>
       <div className="mb-3 flex items-start justify-between gap-2">
-        <h3 className="text-lg font-semibold text-gray-900">{booking.event}</h3>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{booking.event}</h3>
         <StatusBadge status={booking.status} />
       </div>
 

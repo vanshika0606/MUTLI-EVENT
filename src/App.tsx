@@ -4,11 +4,13 @@ import Header from "./components/Header/Header";
 import MonthlyCalendar from "./components/Calendar/MonthlyCalendar";
 import EventList from "./components/Calendar/EventList";
 import BookingSidebar, { type SidebarView } from "./components/BookingCard/BookingSidebar";
+import ThemeToggle from "./components/Common/ThemeToggle";
 import mockData from "./data/mockData.json";
 import type { Booking, MockData } from "./types/mockData";
 import { formatDateKey } from "./utils/calendar";
 import { groupBookingsByDate } from "./utils/bookings";
 import type { RangeEvent } from "./utils/eventBars";
+import { useTheme } from "./hooks/useTheme";
 
 const data = mockData as MockData;
 const ALL_HALLS = "all";
@@ -20,6 +22,7 @@ const STATUS_BAR_STYLES: Record<Booking["status"], string> = {
 };
 
 function App() {
+  const { theme, toggleTheme } = useTheme();
   const [venueId, setVenueId] = useState(data.venues[0].id);
   const [hallId, setHallId] = useState(ALL_HALLS);
   const [visibleMonth, setVisibleMonth] = useState(() => new Date());
@@ -81,7 +84,10 @@ function App() {
 
   return (
     <div className="mx-auto max-w-4xl space-y-4 p-6">
-      <h1 className="text-2xl font-bold text-gray-900">{data.company.name}</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{data.company.name}</h1>
+        <ThemeToggle theme={theme} onToggle={toggleTheme} />
+      </div>
 
       <Header
         venueOptions={data.venues.map((v) => ({ label: v.name, value: v.id }))}

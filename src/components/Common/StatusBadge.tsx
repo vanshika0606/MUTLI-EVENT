@@ -1,9 +1,9 @@
 import type { BookingStatus } from "../../types/mockData";
 
 const STATUS_STYLES: Record<BookingStatus, string> = {
-  Confirmed: "bg-emerald-100 text-emerald-700",
-  Tentative: "bg-amber-100 text-amber-700",
-  Maintenance: "bg-gray-200 text-gray-700",
+  Confirmed: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300",
+  Tentative: "bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300",
+  Maintenance: "bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300",
 };
 
 interface StatusBadgeProps {

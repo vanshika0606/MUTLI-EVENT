@@ -13,13 +13,13 @@ export default function Sidebar({ isOpen, onClose, title, children }: SidebarPro
   return (
     <div className="fixed inset-0 z-20 flex justify-end">
       <div className="absolute inset-0 bg-black/30" onClick={onClose} />
-      <div className="relative flex h-full w-full max-w-sm flex-col overflow-y-auto bg-white p-5 shadow-xl">
+      <div className="relative flex h-full w-full max-w-sm flex-col overflow-y-auto bg-white p-5 shadow-xl dark:bg-gray-900">
         <div className="mb-4 flex items-center justify-between gap-2">
-          <h2 className="text-base font-semibold text-gray-900">{title}</h2>
+          <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">{title}</h2>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+            className="rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-300"
             aria-label="Close"
           >
             ✕

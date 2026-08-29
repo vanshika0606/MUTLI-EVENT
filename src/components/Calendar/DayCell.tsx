@@ -28,12 +28,12 @@ export default function DayCell({
         if (e.key === "Enter" || e.key === " ") onClick?.(date);
       }}
       className={`flex min-h-20 cursor-pointer flex-col items-start gap-1 rounded-md border p-1.5 text-left ${
-        isSelected ? "border-blue-500 ring-2 ring-inset ring-blue-500" : "border-gray-200"
-      } ${isCurrentMonth ? "bg-white" : "bg-gray-50 opacity-60"}`}
+        isSelected ? "border-blue-500 ring-2 ring-inset ring-blue-500" : "border-gray-200 dark:border-gray-700"
+      } ${isCurrentMonth ? "bg-white dark:bg-gray-900" : "bg-gray-50 opacity-60 dark:bg-gray-800"}`}
     >
       <span
         className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-medium ${
-          isToday ? "bg-blue-600 text-white" : "text-gray-700"
+          isToday ? "bg-blue-600 text-white" : "text-gray-700 dark:text-gray-300"
         }`}
       >
         {date.getDate()}

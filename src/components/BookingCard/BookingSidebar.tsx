@@ -43,7 +43,7 @@ export default function BookingSidebar({
           />
           {otherBookings.length > 0 && (
             <div>
-              <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">
+              <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500">
                 Other events this day
               </h4>
               <div className="flex flex-col gap-2">

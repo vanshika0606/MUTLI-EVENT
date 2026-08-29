@@ -24,7 +24,7 @@ export default function EventList({ bookings, maxVisible = 1, onSelectBooking, o
             e.stopPropagation();
             onShowMore?.();
           }}
-          className="px-0.5 text-left text-[11px] font-medium text-gray-500 hover:text-gray-700 hover:underline"
+          className="px-0.5 text-left text-[11px] font-medium text-gray-500 hover:text-gray-700 hover:underline dark:text-gray-400 dark:hover:text-gray-200"
         >
           +{hiddenCount} more
         </button>

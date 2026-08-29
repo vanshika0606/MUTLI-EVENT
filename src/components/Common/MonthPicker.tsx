@@ -39,7 +39,7 @@ export default function MonthPicker({ value, onChange }: MonthPickerProps) {
           setPickerYear(value.getFullYear());
           setIsOpen((open) => !open);
         }}
-        className="flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm hover:border-gray-400"
+        className="flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm hover:border-gray-400 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:hover:border-gray-600"
       >
         <CalendarIcon />
         <span>{label}</span>
@@ -47,21 +47,21 @@ export default function MonthPicker({ value, onChange }: MonthPickerProps) {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 z-10 mt-1 w-64 rounded-md border border-gray-200 bg-white p-3 shadow-lg">
+        <div className="absolute right-0 z-10 mt-1 w-64 rounded-md border border-gray-200 bg-white p-3 shadow-lg dark:border-gray-700 dark:bg-gray-800">
           <div className="mb-2 flex items-center justify-between">
             <button
               type="button"
               onClick={() => setPickerYear((y) => y - 1)}
-              className="rounded-md px-2 py-1 text-sm text-gray-600 hover:bg-gray-100"
+              className="rounded-md px-2 py-1 text-sm text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
               aria-label="Previous year"
             >
               ‹
             </button>
-            <span className="text-sm font-semibold text-gray-900">{pickerYear}</span>
+            <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">{pickerYear}</span>
             <button
               type="button"
               onClick={() => setPickerYear((y) => y + 1)}
-              className="rounded-md px-2 py-1 text-sm text-gray-600 hover:bg-gray-100"
+              className="rounded-md px-2 py-1 text-sm text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
               aria-label="Next year"
             >
               ›
@@ -80,7 +80,9 @@ export default function MonthPicker({ value, onChange }: MonthPickerProps) {
                     setIsOpen(false);
                   }}
                   className={`rounded-md py-1.5 text-sm ${
-                    isSelected ? "bg-blue-600 text-white" : "text-gray-700 hover:bg-gray-100"
+                    isSelected
+                      ? "bg-blue-600 text-white"
+                      : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
                   }`}
                 >
                   {monthLabel}
