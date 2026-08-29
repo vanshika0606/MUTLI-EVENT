@@ -1,7 +1,8 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import "./App.css";
 import Header from "./components/Header/Header";
 import MonthlyCalendar from "./components/Calendar/MonthlyCalendar";
+import CalendarSkeleton from "./components/Calendar/CalendarSkeleton";
 import EventList from "./components/Calendar/EventList";
 import BookingSidebar, { type SidebarView } from "./components/BookingCard/BookingSidebar";
 import ThemeToggle from "./components/Common/ThemeToggle";
@@ -28,6 +29,7 @@ function App() {
   const [visibleMonth, setVisibleMonth] = useState(() => new Date());
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [sidebarView, setSidebarView] = useState<SidebarView | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const venue = data.venues.find((v) => v.id === venueId)!;
 
@@ -35,6 +37,12 @@ function App() {
     () => data.bookings.filter((b) => b.venue === venueId && (hallId === ALL_HALLS || b.hall === hallId)),
     [venueId, hallId]
   );
+
+  useEffect(() => {
+    setIsLoading(true);
+    const timer = setTimeout(() => setIsLoading(false), 500);
+    return () => clearTimeout(timer);
+  }, [venueId, hallId]);
 
   const bookingsByDate = useMemo(() => groupBookingsByDate(filteredBookings), [filteredBookings]);
 
@@ -103,30 +111,34 @@ function App() {
         onVisibleMonthChange={setVisibleMonth}
       />
 
-      <MonthlyCalendar
-        visibleMonth={visibleMonth}
-        value={selectedDate}
-        onChange={handleDateClick}
-        events={multiDayEvents}
-        onSelectEvent={(event) => {
-          const booking = filteredBookings.find((b) => b.id === event.id);
-          if (booking) selectBooking(booking);
-        }}
-        renderDay={(date) => {
-          const dayBookings = bookingsByDate.get(formatDateKey(date)) ?? [];
-          const singleDayBookings = dayBookings.filter((b) => b.startDate === b.endDate);
-          const hasBar = dayBookings.some((b) => b.startDate !== b.endDate);
+      {isLoading ? (
+        <CalendarSkeleton />
+      ) : (
+        <MonthlyCalendar
+          visibleMonth={visibleMonth}
+          value={selectedDate}
+          onChange={handleDateClick}
+          events={multiDayEvents}
+          onSelectEvent={(event) => {
+            const booking = filteredBookings.find((b) => b.id === event.id);
+            if (booking) selectBooking(booking);
+          }}
+          renderDay={(date) => {
+            const dayBookings = bookingsByDate.get(formatDateKey(date)) ?? [];
+            const singleDayBookings = dayBookings.filter((b) => b.startDate === b.endDate);
+            const hasBar = dayBookings.some((b) => b.startDate !== b.endDate);
 
-          return (
-            <EventList
-              bookings={singleDayBookings}
-              maxVisible={hasBar ? 0 : 1}
-              onSelectBooking={(booking) => setSidebarView({ type: "booking", booking, siblings: dayBookings })}
-              onShowMore={() => setSidebarView({ type: "day", date, bookings: dayBookings })}
-            />
-          );
-        }}
-      />
+            return (
+              <EventList
+                bookings={singleDayBookings}
+                maxVisible={hasBar ? 0 : 1}
+                onSelectBooking={(booking) => setSidebarView({ type: "booking", booking, siblings: dayBookings })}
+                onShowMore={() => setSidebarView({ type: "day", date, bookings: dayBookings })}
+              />
+            );
+          }}
+        />
+      )}
 
       <BookingSidebar
         view={sidebarView}
