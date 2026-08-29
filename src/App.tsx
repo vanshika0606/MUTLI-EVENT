@@ -12,9 +12,11 @@ import { formatDateKey } from "./utils/calendar";
 import { groupBookingsByDate } from "./utils/bookings";
 import type { RangeEvent } from "./utils/eventBars";
 import { useTheme } from "./hooks/useTheme";
+import { useLocalStorage } from "./hooks/useLocalStorage";
 
 const data = mockData as MockData;
 const ALL_HALLS = "all";
+const BOOKINGS_STORAGE_KEY = "multi-event:bookings";
 
 const STATUS_BAR_STYLES: Record<Booking["status"], string> = {
   Confirmed: "bg-emerald-600 text-white",
@@ -31,7 +33,7 @@ function App() {
   const [sidebarView, setSidebarView] = useState<SidebarView | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [bookings, setBookings] = useState<Booking[]>(data.bookings);
+  const [bookings, setBookings] = useLocalStorage<Booking[]>(BOOKINGS_STORAGE_KEY, data.bookings);
 
   const venue = data.venues.find((v) => v.id === venueId)!;
 
