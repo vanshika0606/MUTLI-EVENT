@@ -1,13 +1,12 @@
 # Multi-Venue Availability Calendar
 
-A monthly/weekly availability calendar for venue managers to view, filter, and manage
-bookings across venues and halls — built for the Ibento Full Stack Engineer assessment.
+A monthly and weekly availability calendar for venue managers to view, filter, and manage bookings across venues and halls. Built for the Ibento Full Stack Engineer assessment.
 
 ## Tech Stack
 
-- React 19 + TypeScript
-- Vite (with the rolldown-powered build)
-- Tailwind CSS v4
+* React 19 + TypeScript
+* Vite
+* Tailwind CSS v4
 
 ## Getting Started
 
@@ -16,103 +15,109 @@ npm install
 npm run dev
 ```
 
-> **Node version:** this project's Vite/rolldown toolchain requires **Node 20.12+**
-> (needs the `node:util` `styleText` export). If your default `node` is older
-> (`node --version`), switch first — e.g. with nvm: `nvm use 20` (or newer, `nvm use 24`
-> also works) — before running `npm run dev`.
+**Node version:** This project requires **Node 20.12+**. You can check your current version with:
+
+```bash
+node --version
+```
+
+If you use nvm and have an older version:
+
+```bash
+nvm use 20
+```
+
+Node 24 also works.
 
 ## Features
 
-- **Month and week views** with navigation (prev/next, "Today", and a month/year picker).
-- **Venue and hall filtering**, plus **search by event or customer name**.
-- **Multi-day bookings render as spanning bars**; single-day bookings render as chips —
-  both share a per-day overflow budget with a "+N more" affordance into a day-detail view.
-- **Booking detail sidebar**: clicking a date or a booking opens a panel with the full
-  booking record, plus the other bookings sharing that day.
-- **Drag-and-drop rescheduling**: drag a chip or bar to a new day to move that booking,
-  preserving its original duration.
-- **Light/dark theme toggle**, persisted and defaulting to the OS preference.
-- **Loading skeletons** for the calendar grid (simulated here, since there's no real
-  backend yet — see [Notes](#notes--tradeoffs)).
-- Booking changes (currently just drag-and-drop moves) **persist to `localStorage`**
-  across reloads.
+* **Month and week views** with previous/next navigation, a "Today" button, and a month/year picker.
+* **Venue and hall filtering**.
+* **Search by event or customer name**.
+* **Single-day bookings** are shown as chips and **multi-day bookings** are shown as spanning bars.
+* A **"+N more"** option is shown when a day has more bookings than can fit.
+* **Booking details sidebar** that opens when a date or booking is clicked.
+* **Drag-and-drop booking rescheduling** while preserving the original booking duration.
+* **Light and dark mode**, saved in `localStorage`.
+* **Loading skeletons** for the calendar.
+* Booking changes made through drag-and-drop are saved in **localStorage**.
 
 ## Mock Data
 
-Data lives in [src/data/mockData.json](src/data/mockData.json) and follows the hierarchy
-**Company → Venue → Hall → Booking**:
+Mock data is available in:
 
-- **Company** – top-level org
-- **Venue** – belongs to a company, contains a list of **halls**
-- **Booking** – made against a hall (`customer`, `event`, `startDate`/`startTime`,
-  `endDate`/`endTime`, `venue`, `hall`, `status`, `guests`)
+`src/data/mockData.json`
 
-Types for these are defined in [src/types/mockData.ts](src/types/mockData.ts).
+The data follows this structure:
+
+**Company → Venue → Hall → Booking**
+
+* **Company** – Top-level organization.
+* **Venue** – Belongs to a company and contains one or more halls.
+* **Booking** – Created against a hall and contains customer, event, date/time, venue, hall, status, and guest information.
+
+The TypeScript types are defined in:
+
+`src/types/mockData.ts`
 
 ## Project Structure
 
-```
+```text
 src/
 ├── components/
-│   ├── Calendar/     # MonthlyCalendar, WeekRow, DayCell, EventBar/EventChip/EventList,
-│   │                 # CalendarSkeleton — generic, booking-agnostic where possible
-│   ├── Header/       # Toolbar: venue/hall/search, nav, month picker
-│   ├── BookingCard/  # BookingCard, BookingDetails, BookingSidebar — booking-specific
-│   ├── Common/        # Dropdown, Sidebar, DetailRow, StatusBadge, SearchInput,
-│   │                 # MonthPicker, ThemeToggle, Skeleton — reusable UI primitives
-│   ├── BookingModal/ # reserved, unused
-│   └── Filters/      # reserved, unused
-├── hooks/            # useTheme, useLocalStorage
-├── store/            # ThemeContext (React Context + provider)
-├── utils/            # calendar.ts (date/grid math), eventBars.ts (bar layout/lanes),
-│                     # bookings.ts (grouping bookings by date)
-├── types/            # mockData.ts — Booking/Venue/Hall/Company types
-└── data/             # mock data
+│   ├── Calendar/       # Calendar components
+│   ├── Header/         # Filters, navigation and month picker
+│   ├── BookingCard/    # Booking details and sidebar
+│   ├── Common/         # Reusable UI components
+│   ├── BookingModal/   # Reserved for future use
+│   └── Filters/        # Reserved for future use
+│
+├── hooks/              # Custom hooks
+├── store/              # Theme context
+├── utils/              # Date, calendar and booking utilities
+├── types/              # TypeScript types
+└── data/               # Mock data
 ```
 
 ## Approach & Architectural Decisions
 
-**Calendar internals are decoupled from the booking domain.** `MonthlyCalendar` and
-`WeekRow` don't import the `Booking` type at all — they work off a generic `RangeEvent`
-shape (`{ id, label, startDate, endDate, className }`) for the spanning-bar layout, and a
-`renderDay(date)` render-prop for whatever a consumer wants to show inside a day cell.
-`App.tsx` is the only place that knows about bookings: it splits them into single-day
-(rendered as `EventChip`s via `EventList`) and multi-day (rendered as `EventBar`s via the
-calendar's own lane-packing algorithm in `utils/eventBars.ts`) and wires click handlers
-into the sidebar. This means the calendar shell could be reused for a different domain
-without touching booking logic.
+### Reusable calendar
 
-**State lives in `App.tsx`, not in the calendar components.** The visible month/week,
-selected date, and sidebar view are owned by `App` and passed down as props — the
-calendar components are otherwise presentational. This keeps the "which day is
-selected / what's in the sidebar" logic in one place instead of scattered across
-components that would each need to know about siblings, day-lists, etc.
+The calendar components are kept separate from the booking-specific logic.
 
-**Theme uses React Context, not prop-drilling.** `ThemeProvider` (in `store/`) owns the
-`dark`/`light` state, toggles a `dark` class on `<html>` (paired with Tailwind v4's
-`@custom-variant dark` in `index.css`), and persists the choice to `localStorage`. Any
-component can read/toggle it via the `useTheme()` hook without threading props through
-intermediate components.
+`MonthlyCalendar` and `WeekRow` use a generic event structure for displaying multi-day events. This allows the calendar components to be reused without depending directly on the `Booking` type.
 
-**Drag-and-drop uses the native HTML5 DnD API**, not a library — `EventChip`/`EventBar`
-are `draggable` and put the booking id in `dataTransfer`; `DayCell` is the drop target.
-This avoids a dependency for a fairly small interaction surface.
+The booking logic is mainly handled in `App.tsx`, where bookings are separated into single-day and multi-day bookings and connected to the booking sidebar.
 
-**Booking data persistence is minimal by design.** Only `bookings` (the one thing the app
-actually mutates, via drag-and-drop) persists to `localStorage`, via a small generic
-`useLocalStorage` hook. View-only state (selected venue/hall, search text, visible month)
-intentionally does *not* persist — it's UI state, not data, so a fresh visit should start
-from a clean view.
+### State management
+
+The main application state, such as the selected month, date, and sidebar state, is managed in `App.tsx`.
+
+Calendar components receive data and callbacks through props, which keeps the components focused mainly on displaying the UI.
+
+### Theme management
+
+The theme is managed using React Context.
+
+The `ThemeProvider` handles light/dark mode, updates the `dark` class on the HTML element, and saves the selected theme in `localStorage`.
+
+Components can access and change the theme using the `useTheme()` hook without passing theme props through multiple components.
+
+### Drag and drop
+
+Native HTML5 drag-and-drop is used instead of an external library.
+
+Booking cards are draggable, and calendar day cells act as drop targets. This keeps the implementation simple without adding another dependency.
+
+### Data persistence
+
+Only booking changes are saved in `localStorage`.
+
+Other UI state, such as selected filters, search text, and the visible month, is not persisted because it is temporary UI state.
 
 ## Notes / Tradeoffs
 
-- There's no backend — `mockData.json` is loaded statically and `bookings` state is
-  seeded from it, then persisted to `localStorage` on change. A real version would swap
-  `useLocalStorage` for a data-fetching hook and drop the simulated loading delay in
-  `App.tsx`.
-- The loading skeleton is simulated with a `setTimeout` on venue/hall change, since there's
-  no real request to be pending on. It's there to demonstrate the pattern, not because the
-  static JSON import is actually slow.
-- Drag-and-drop doesn't validate for double-booking conflicts on drop — out of scope for
-  the time budget, but the natural next step (`utils/bookings.ts` already groups bookings
-  by date, so a conflict check would slot in there).
+* There is no backend. The application starts with mock data from `mockData.json`, and booking changes are saved in `localStorage`.
+* The loading skeleton is simulated because there is no real API request.
+* Drag-and-drop does not currently check for double-booking conflicts. This was kept out of scope due to the assessment time limit.
+* In a production application, mock data and `localStorage` could be replaced with API calls and backend data persistence.
