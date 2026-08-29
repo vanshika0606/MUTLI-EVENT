@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { useState } from "react";
 import { WEEKDAY_LABELS, getMonthGrid, isSameDay } from "../../utils/calendar";
 import DayCell from "./DayCell";
@@ -5,9 +6,10 @@ import DayCell from "./DayCell";
 interface MonthlyCalendarProps {
   value?: Date;
   onChange?: (date: Date) => void;
+  renderDay?: (date: Date) => ReactNode;
 }
 
-export default function MonthlyCalendar({ value, onChange }: MonthlyCalendarProps) {
+export default function MonthlyCalendar({ value, onChange, renderDay }: MonthlyCalendarProps) {
   const [visibleMonth, setVisibleMonth] = useState(() => value ?? new Date());
   const today = new Date();
 
@@ -15,7 +17,7 @@ export default function MonthlyCalendar({ value, onChange }: MonthlyCalendarProp
   const monthLabel = visibleMonth.toLocaleDateString("en-US", { month: "long", year: "numeric" });
 
   return (
-    <div className="w-full max-w-sm rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+    <div className="w-full rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-sm font-semibold text-gray-900">{monthLabel}</h2>
         <div className="flex items-center gap-1">
@@ -60,7 +62,9 @@ export default function MonthlyCalendar({ value, onChange }: MonthlyCalendarProp
             isToday={isSameDay(date, today)}
             isSelected={value ? isSameDay(date, value) : false}
             onClick={onChange}
-          />
+          >
+            {renderDay?.(date)}
+          </DayCell>
         ))}
       </div>
     </div>
