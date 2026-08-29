@@ -22,6 +22,7 @@ const STATUS_BAR_STYLES: Record<Booking["status"], string> = {
 function App() {
   const [venueId, setVenueId] = useState(data.venues[0].id);
   const [hallId, setHallId] = useState(ALL_HALLS);
+  const [visibleMonth, setVisibleMonth] = useState(() => new Date());
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [sidebarView, setSidebarView] = useState<SidebarView | null>(null);
 
@@ -80,8 +81,9 @@ function App() {
 
   return (
     <div className="mx-auto max-w-4xl space-y-4 p-6">
+      <h1 className="text-2xl font-bold text-gray-900">{data.company.name}</h1>
+
       <Header
-        title={data.company.name}
         venueOptions={data.venues.map((v) => ({ label: v.name, value: v.id }))}
         venueId={venueId}
         onVenueChange={handleVenueChange}
@@ -91,9 +93,12 @@ function App() {
         ]}
         hallId={hallId}
         onHallChange={setHallId}
+        visibleMonth={visibleMonth}
+        onVisibleMonthChange={setVisibleMonth}
       />
 
       <MonthlyCalendar
+        visibleMonth={visibleMonth}
         value={selectedDate}
         onChange={handleDateClick}
         events={multiDayEvents}

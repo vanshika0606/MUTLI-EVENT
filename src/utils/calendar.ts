@@ -1,4 +1,4 @@
-export const WEEKDAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+export const WEEKDAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 export function formatDateKey(date: Date): string {
   const year = date.getFullYear();
@@ -19,7 +19,8 @@ export function getMonthGrid(monthDate: Date): Date[] {
   const year = monthDate.getFullYear();
   const month = monthDate.getMonth();
   const firstOfMonth = new Date(year, month, 1);
-  const gridStart = new Date(year, month, 1 - firstOfMonth.getDay());
+  const mondayOffset = (firstOfMonth.getDay() + 6) % 7;
+  const gridStart = new Date(year, month, 1 - mondayOffset);
 
   return Array.from(
     { length: 42 },
