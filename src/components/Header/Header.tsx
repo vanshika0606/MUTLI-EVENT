@@ -1,5 +1,6 @@
 import Dropdown, { type DropdownOption } from "../Common/Dropdown";
 import MonthPicker from "../Common/MonthPicker";
+import SearchInput from "../Common/SearchInput";
 
 interface HeaderProps {
   venueOptions: DropdownOption[];
@@ -8,6 +9,8 @@ interface HeaderProps {
   hallOptions: DropdownOption[];
   hallId: string;
   onHallChange: (value: string) => void;
+  searchQuery: string;
+  onSearchChange: (value: string) => void;
   visibleMonth: Date;
   onVisibleMonthChange: (date: Date) => void;
 }
@@ -19,6 +22,8 @@ export default function Header({
   hallOptions,
   hallId,
   onHallChange,
+  searchQuery,
+  onSearchChange,
   visibleMonth,
   onVisibleMonthChange,
 }: HeaderProps) {
@@ -34,6 +39,9 @@ export default function Header({
         </div>
         <div className="w-56">
           <Dropdown options={hallOptions} value={hallId} onChange={onHallChange} />
+        </div>
+        <div className="w-64">
+          <SearchInput value={searchQuery} onChange={onSearchChange} placeholder="Search event or customer" />
         </div>
         <button
           type="button"

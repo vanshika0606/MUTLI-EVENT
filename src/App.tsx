@@ -30,13 +30,19 @@ function App() {
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [sidebarView, setSidebarView] = useState<SidebarView | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const venue = data.venues.find((v) => v.id === venueId)!;
 
-  const filteredBookings = useMemo(
-    () => data.bookings.filter((b) => b.venue === venueId && (hallId === ALL_HALLS || b.hall === hallId)),
-    [venueId, hallId]
-  );
+  const filteredBookings = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    return data.bookings.filter((b) => {
+      if (b.venue !== venueId) return false;
+      if (hallId !== ALL_HALLS && b.hall !== hallId) return false;
+      if (!query) return true;
+      return b.event.toLowerCase().includes(query) || b.customer.toLowerCase().includes(query);
+    });
+  }, [venueId, hallId, searchQuery]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -107,6 +113,8 @@ function App() {
         ]}
         hallId={hallId}
         onHallChange={setHallId}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
         visibleMonth={visibleMonth}
         onVisibleMonthChange={setVisibleMonth}
       />
