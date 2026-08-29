@@ -1,0 +1,274 @@
+{
+  "company": {
+    "id": "company-1",
+    "name": "Ibento Hospitality Group"
+  },
+  "venues": [
+    {
+      "id": "venue-1",
+      "name": "Grand Convention Center",
+      "location": "MG Road, Bengaluru",
+      "companyId": "company-1",
+      "halls": [
+        { "id": "hall-1", "name": "Grand Ballroom", "venueId": "venue-1", "capacity": 800 },
+        { "id": "hall-2", "name": "Emerald Hall", "venueId": "venue-1", "capacity": 300 },
+        { "id": "hall-3", "name": "Sapphire Hall", "venueId": "venue-1", "capacity": 250 }
+      ]
+    },
+    {
+      "id": "venue-2",
+      "name": "Lotus Business Park",
+      "location": "Whitefield, Bengaluru",
+      "companyId": "company-1",
+      "halls": [
+        { "id": "hall-4", "name": "Lotus Hall", "venueId": "venue-2", "capacity": 400 },
+        { "id": "hall-5", "name": "Conference Hall", "venueId": "venue-2", "capacity": 150 }
+      ]
+    },
+    {
+      "id": "venue-3",
+      "name": "Royal Palace Events",
+      "location": "Indiranagar, Bengaluru",
+      "companyId": "company-1",
+      "halls": [
+        { "id": "hall-6", "name": "Royal Hall", "venueId": "venue-3", "capacity": 500 }
+      ]
+    }
+  ],
+  "bookings": [
+    {
+      "id": "booking-1",
+      "customer": "ABC Pvt Ltd",
+      "event": "International Expo",
+      "startDate": "2026-08-12",
+      "startTime": "09:00",
+      "endDate": "2026-08-15",
+      "endTime": "18:00",
+      "venue": "venue-1",
+      "hall": "hall-1",
+      "status": "Confirmed",
+      "guests": 1200
+    },
+    {
+      "id": "booking-2",
+      "customer": "TechCorp Solutions",
+      "event": "Business Conference",
+      "startDate": "2026-08-12",
+      "startTime": "09:00",
+      "endDate": "2026-08-12",
+      "endTime": "17:00",
+      "venue": "venue-1",
+      "hall": "hall-2",
+      "status": "Tentative",
+      "guests": 200
+    },
+    {
+      "id": "booking-3",
+      "customer": "Bright Solutions",
+      "event": "Corporate Meet",
+      "startDate": "2026-08-08",
+      "startTime": "10:00",
+      "endDate": "2026-08-08",
+      "endTime": "16:00",
+      "venue": "venue-1",
+      "hall": "hall-2",
+      "status": "Confirmed",
+      "guests": 90
+    },
+    {
+      "id": "booking-4",
+      "customer": "Reddy Family",
+      "event": "Sangeet Night",
+      "startDate": "2026-08-10",
+      "startTime": "18:00",
+      "endDate": "2026-08-10",
+      "endTime": "23:30",
+      "venue": "venue-1",
+      "hall": "hall-1",
+      "status": "Confirmed",
+      "guests": 350
+    },
+    {
+      "id": "booking-5",
+      "customer": "Sharma Family",
+      "event": "Wedding Reception",
+      "startDate": "2026-08-15",
+      "startTime": "10:00",
+      "endDate": "2026-08-15",
+      "endTime": "22:00",
+      "venue": "venue-1",
+      "hall": "hall-1",
+      "status": "Confirmed",
+      "guests": 500
+    },
+    {
+      "id": "booking-6",
+      "customer": "Nova Tech",
+      "event": "Product Launch",
+      "startDate": "2026-08-18",
+      "startTime": "11:00",
+      "endDate": "2026-08-18",
+      "endTime": "15:00",
+      "venue": "venue-1",
+      "hall": "hall-2",
+      "status": "Confirmed",
+      "guests": 180
+    },
+    {
+      "id": "booking-7",
+      "customer": "Mehta Family",
+      "event": "Wedding",
+      "startDate": "2026-08-20",
+      "startTime": "12:00",
+      "endDate": "2026-08-21",
+      "endTime": "23:00",
+      "venue": "venue-1",
+      "hall": "hall-3",
+      "status": "Confirmed",
+      "guests": 400
+    },
+    {
+      "id": "booking-8",
+      "customer": "EduWorld",
+      "event": "Seminar",
+      "startDate": "2026-08-22",
+      "startTime": "09:30",
+      "endDate": "2026-08-22",
+      "endTime": "13:00",
+      "venue": "venue-1",
+      "hall": "hall-2",
+      "status": "Confirmed",
+      "guests": 120
+    },
+    {
+      "id": "booking-9",
+      "customer": "Global Corp",
+      "event": "Annual Summit",
+      "startDate": "2026-08-25",
+      "startTime": "09:00",
+      "endDate": "2026-08-28",
+      "endTime": "18:00",
+      "venue": "venue-1",
+      "hall": "hall-1",
+      "status": "Confirmed",
+      "guests": 600
+    },
+    {
+      "id": "booking-10",
+      "customer": "Hope Foundation",
+      "event": "Charity Gala",
+      "startDate": "2026-08-25",
+      "startTime": "19:00",
+      "endDate": "2026-08-25",
+      "endTime": "23:00",
+      "venue": "venue-1",
+      "hall": "hall-3",
+      "status": "Tentative",
+      "guests": 300
+    },
+    {
+      "id": "booking-11",
+      "customer": "Global Corp",
+      "event": "Board Meeting",
+      "startDate": "2026-08-25",
+      "startTime": "09:00",
+      "endDate": "2026-08-25",
+      "endTime": "11:00",
+      "venue": "venue-1",
+      "hall": "hall-2",
+      "status": "Confirmed",
+      "guests": 30
+    },
+    {
+      "id": "booking-12",
+      "customer": "-",
+      "event": "Hall Maintenance",
+      "startDate": "2026-08-28",
+      "startTime": "00:00",
+      "endDate": "2026-08-28",
+      "endTime": "23:59",
+      "venue": "venue-1",
+      "hall": "hall-3",
+      "status": "Maintenance",
+      "guests": 0
+    },
+    {
+      "id": "booking-13",
+      "customer": "Retail Association",
+      "event": "Trade Fair",
+      "startDate": "2026-08-14",
+      "startTime": "10:00",
+      "endDate": "2026-08-16",
+      "endTime": "20:00",
+      "venue": "venue-2",
+      "hall": "hall-4",
+      "status": "Confirmed",
+      "guests": 700
+    },
+    {
+      "id": "booking-14",
+      "customer": "Policy Institute",
+      "event": "Panel Discussion",
+      "startDate": "2026-08-14",
+      "startTime": "15:00",
+      "endDate": "2026-08-14",
+      "endTime": "18:00",
+      "venue": "venue-2",
+      "hall": "hall-5",
+      "status": "Tentative",
+      "guests": 80
+    },
+    {
+      "id": "booking-15",
+      "customer": "Skill Academy",
+      "event": "Workshop",
+      "startDate": "2026-08-19",
+      "startTime": "09:00",
+      "endDate": "2026-08-19",
+      "endTime": "17:00",
+      "venue": "venue-2",
+      "hall": "hall-5",
+      "status": "Confirmed",
+      "guests": 60
+    },
+    {
+      "id": "booking-16",
+      "customer": "Kapoor Family",
+      "event": "Anniversary Party",
+      "startDate": "2026-08-05",
+      "startTime": "18:00",
+      "endDate": "2026-08-05",
+      "endTime": "23:00",
+      "venue": "venue-3",
+      "hall": "hall-6",
+      "status": "Confirmed",
+      "guests": 250
+    },
+    {
+      "id": "booking-17",
+      "customer": "-",
+      "event": "Hall Maintenance",
+      "startDate": "2026-08-11",
+      "startTime": "00:00",
+      "endDate": "2026-08-11",
+      "endTime": "23:59",
+      "venue": "venue-3",
+      "hall": "hall-6",
+      "status": "Maintenance",
+      "guests": 0
+    },
+    {
+      "id": "booking-18",
+      "customer": "Nair Family",
+      "event": "Engagement Ceremony",
+      "startDate": "2026-08-23",
+      "startTime": "17:00",
+      "endDate": "2026-08-23",
+      "endTime": "22:00",
+      "venue": "venue-3",
+      "hall": "hall-6",
+      "status": "Confirmed",
+      "guests": 150
+    }
+  ]
+}
